@@ -1,6 +1,5 @@
 import { createContext, useState } from 'react'
 import { useEvent } from 'react-use'
-import { Panel, Sandbox } from './'
 
 export const GamepadContext = createContext()
 
