@@ -14,7 +14,7 @@ const Circle = styled.div.attrs((props) => ({
   width: ${(props) => (props.small ? 60 : 100)}px;
 `
 
-export const Joystick = ({ gamepad, xAxis, yAxis, ...props }) => {
+export const GamepadStick = ({ gamepad, xAxis, yAxis, ...props }) => {
   return (
     <Circle {...props}>
       {gamepad && (

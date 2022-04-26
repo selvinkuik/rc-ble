@@ -1,8 +1,12 @@
 import { useContext } from 'react'
-import { GamepadContext, Panel } from './'
+import { Dashboard, GamepadContext, Panel } from './'
 
 export const GamepadDashboard = () => {
   const { gamepadDevice } = useContext(GamepadContext)
 
-  return <Panel>{gamepadDevice ? `${gamepadDevice.id} connected` : 'Gamepad not connected'}</Panel>
+  return (
+    <Dashboard label="Gamepad">
+      <Panel>{gamepadDevice ? gamepadDevice.id : 'Not connected'}</Panel>
+    </Dashboard>
+  )
 }

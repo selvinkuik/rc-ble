@@ -1,11 +1,10 @@
 import styled from 'styled-components'
 
-const StyledPanel = styled.div`
+const StyledPanel = styled.span`
   border: 2px solid #f0f0f0;
   border-radius: 24px;
   color: #2e2e2e;
-  display: inline-block;
-  margin: 0 10px;
+  margin-right: 10px;
   padding: 4px 20px;
 `
 

@@ -1,13 +1,13 @@
 import { useContext } from 'react'
-import { BleContext, ConnectBleButton, Panel } from './'
+import { BleContext, ConnectBleButton, Dashboard, Panel } from './'
 
 export const BleDashboard = () => {
   const { bleDevice } = useContext(BleContext)
 
   return (
-    <>
-      <Panel>{bleDevice ? `${bleDevice.name} connected` : 'BLE not connected'}</Panel>
+    <Dashboard label="BLE">
+      <Panel>{bleDevice ? bleDevice.name : 'Not connected'}</Panel>
       <ConnectBleButton />
-    </>
+    </Dashboard>
   )
 }

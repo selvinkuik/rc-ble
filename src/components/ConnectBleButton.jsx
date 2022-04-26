@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import { BleContext, Button } from './'
 
-const connectBle = (setBleDevice, setBleCharacteristic1, setBleCharacteristic2) => {
+const connectBle = (setBleDevice, setBleCharacteristic) => {
   navigator.bluetooth
     .requestDevice({ filters: [{ services: [process.env.REACT_APP_BLE_SERVICE_ID] }] })
     .then((device) => {
@@ -9,35 +9,26 @@ const connectBle = (setBleDevice, setBleCharacteristic1, setBleCharacteristic2) 
       return device.gatt.connect()
     })
     .then((server) => server.getPrimaryService(process.env.REACT_APP_BLE_SERVICE_ID))
-    .then((service) => {
-      service
-        .getCharacteristic(process.env.REACT_APP_BLE_CHARACTERISTIC_ID_1)
-        .then((characteristic) => setBleCharacteristic1(characteristic))
-
-      service
-        .getCharacteristic(process.env.REACT_APP_BLE_CHARACTERISTIC_ID_2)
-        .then((characteristic) => setBleCharacteristic2(characteristic))
-    })
+    .then((service) => service.getCharacteristic(process.env.REACT_APP_BLE_CHARACTERISTIC))
+    .then((characteristic) => setBleCharacteristic(characteristic))
 }
 
-const disconnectBle = (bleDevice, setBleDevice, setBleCharacteristic1, setBleCharacteristic2) => {
+const disconnectBle = (bleDevice, setBleDevice, setBleCharacteristic) => {
   bleDevice.gatt.disconnect()
   setBleDevice()
-  setBleCharacteristic1()
-  setBleCharacteristic2()
+  setBleCharacteristic()
 }
 
 export const ConnectBleButton = () => {
-  const { bleDevice, setBleDevice, setBleCharacteristic1, setBleCharacteristic2 } =
-    useContext(BleContext)
+  const { bleDevice, setBleDevice, setBleCharacteristic } = useContext(BleContext)
 
   if (bleDevice) {
     return (
       <Button
         onClick={() => {
-          disconnectBle(bleDevice, setBleDevice, setBleCharacteristic1, setBleCharacteristic2)
+          disconnectBle(bleDevice, setBleDevice, setBleCharacteristic)
         }}>
-        Disconnect BLE
+        Disconnect
       </Button>
     )
   }
@@ -45,9 +36,9 @@ export const ConnectBleButton = () => {
   return (
     <Button
       onClick={() => {
-        connectBle(setBleDevice, setBleCharacteristic1, setBleCharacteristic2)
+        connectBle(setBleDevice, setBleCharacteristic)
       }}>
-      Connect BLE
+      Connect
     </Button>
   )
 }
