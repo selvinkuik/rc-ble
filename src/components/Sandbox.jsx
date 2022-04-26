@@ -20,13 +20,10 @@ export const Sandbox = () => {
   if (gamepads[0] && bleCharacteristic1) {
     bleCharacteristic1.writeValueWithoutResponse(
       encoder.encode(
-        Math.abs(Math.round(gamepads[0].axes[1] * 255)) +
+        Math.abs(Math.round(gamepads[0].axes[1] * 1000)) +
+          1000 +
           ',' +
-          (gamepads[0].axes[1] >= 0 ? 1 : 0) +
-          ',' +
-          Math.abs(Math.round(gamepads[0].axes[2] * 255)) +
-          ',' +
-          (gamepads[0].axes[2] >= 0 ? 1 : 0),
+          Math.abs(Math.round(gamepads[0].axes[2] * 180)),
       ),
     )
   }
