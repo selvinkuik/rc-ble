@@ -38,8 +38,8 @@ export const Rc = () => {
   })
 
   if (gamepads[0] && bleCharacteristic) {
-    liftEsc = lift * 10 + 1000
-    throttleEsc = gamepads[0].axes[1] < 0 ? -Math.round(gamepads[0].axes[1] * 1000) + 1000 : 1000
+    liftEsc = lift * 6 + 1200
+    throttleEsc = gamepads[0].axes[1] < 0 ? -Math.round(gamepads[0].axes[1] * 600) + 1200 : 1200
     rudderServo = Math.round(gamepads[0].axes[2] * 80) + 90
 
     // console.log(`${liftEsc},${throttleEsc},${rudderServo}`)
