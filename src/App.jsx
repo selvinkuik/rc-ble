@@ -4,7 +4,6 @@ import {
   BleProvider,
   GamepadDashboard,
   GamepadProvider,
-  RcProvider,
   Reset,
   Rc,
 } from './components'
@@ -23,13 +22,11 @@ const App = () => {
       <Reset />
       <BleProvider>
         <GamepadProvider>
-          <RcProvider>
-            <Container>
-              <GamepadDashboard />
-              <BleDashboard />
-              <Rc />
-            </Container>
-          </RcProvider>
+          <Container>
+            <GamepadDashboard />
+            <BleDashboard />
+            <Rc />
+          </Container>
         </GamepadProvider>
       </BleProvider>
     </>

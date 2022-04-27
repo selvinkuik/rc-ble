@@ -1,7 +1,7 @@
-import { useContext } from 'react'
-import { useRaf } from 'react-use'
+import { useContext, useState } from 'react'
 import styled from 'styled-components'
-import { Bar, BleContext, GamepadButton, GamepadStick, RcContext } from './'
+import { useAnimationFrame } from '../hooks'
+import { Bar, BleContext, GamepadButton, GamepadStick } from './'
 import { Dashboard } from './Dashboard'
 
 const encoder = new TextEncoder('utf-8')
@@ -17,21 +17,30 @@ const Grid = styled.div`
 `
 
 export const Rc = () => {
-  useRaf(8.64e7)
   const { bleCharacteristic } = useContext(BleContext)
-  const { debouncedLift, setLift } = useContext(RcContext)
-  const gamepads = navigator.getGamepads()
+  const [gamepads, setGamepads] = useState([])
+  const [lift, setLift] = useState(0)
+  let liftEsc = null
+  let throttleEsc = null
+  let rudderServo = null
+
+  useAnimationFrame(() => {
+    const gamepads = navigator.getGamepads()
+    setGamepads(gamepads)
+
+    if (gamepads[0] && bleCharacteristic) {
+      if (gamepads[0].buttons[5].pressed) {
+        setLift((previousLift) => (previousLift < 100 ? previousLift + 1 : previousLift))
+      } else if (gamepads[0].buttons[4].pressed) {
+        setLift((previousLift) => (previousLift > 0 ? previousLift - 1 : previousLift))
+      }
+    }
+  })
 
   if (gamepads[0] && bleCharacteristic) {
-    if (gamepads[0].buttons[5].pressed && debouncedLift < 100) {
-      setLift(debouncedLift + 1)
-    } else if (gamepads[0].buttons[4].pressed && debouncedLift > 0) {
-      setLift(debouncedLift - 1)
-    }
-
-    const liftEsc = debouncedLift * 10 + 1000
-    const throttleEsc = Math.abs(Math.round(gamepads[0].axes[1] * 1000)) + 1000
-    const rudderServo = Math.round(gamepads[0].axes[2] * 90) + 90
+    liftEsc = lift * 10 + 1000
+    throttleEsc = gamepads[0].axes[1] < 0 ? -Math.round(gamepads[0].axes[1] * 1000) + 1000 : 1000
+    rudderServo = Math.round(gamepads[0].axes[2] * 80) + 90
 
     bleCharacteristic.writeValueWithoutResponse(
       encoder.encode(`${liftEsc},${throttleEsc},${rudderServo}`),
@@ -43,19 +52,23 @@ export const Rc = () => {
       <Dashboard label="Lift">
         <Container>
           <GamepadButton gamepad={gamepads[0]} button={4} />
-          <Bar value={debouncedLift} />
+          <Bar value={lift}>{liftEsc}</Bar>
           <GamepadButton gamepad={gamepads[0]} button={5} />
         </Container>
       </Dashboard>
       <Container>
         <Grid>
           <Dashboard label="Throttle">
-            <GamepadStick gamepad={gamepads[0]} yAxis={1} />
+            <GamepadStick gamepad={gamepads[0]} yAxis={1} yMax={0}>
+              {throttleEsc}
+            </GamepadStick>
           </Dashboard>
         </Grid>
         <Grid>
           <Dashboard label="Direction">
-            <GamepadStick gamepad={gamepads[0]} xAxis={2} />
+            <GamepadStick gamepad={gamepads[0]} xAxis={2}>
+              {rudderServo}
+            </GamepadStick>
           </Dashboard>
         </Grid>
       </Container>
