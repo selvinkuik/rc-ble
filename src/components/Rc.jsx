@@ -66,7 +66,7 @@ export const Rc = () => {
           </Dashboard>
         </Grid>
         <Grid>
-          <Dashboard label="Direction">
+          <Dashboard label="Rudder">
             <GamepadStick gamepad={gamepads[0]} xAxis={2}>
               {rudderServo}
             </GamepadStick>
