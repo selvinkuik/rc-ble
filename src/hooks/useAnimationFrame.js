@@ -5,7 +5,7 @@ export const useAnimationFrame = (callback) => {
   const previousTimeRef = useRef()
 
   const animate = (time) => {
-    if (previousTimeRef.current != undefined) {
+    if (previousTimeRef.current !== undefined) {
       const deltaTime = time - previousTimeRef.current
       callback(deltaTime)
     }
@@ -16,5 +16,5 @@ export const useAnimationFrame = (callback) => {
   useEffect(() => {
     requestRef.current = requestAnimationFrame(animate)
     return () => cancelAnimationFrame(requestRef.current)
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 }
