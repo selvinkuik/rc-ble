@@ -28,7 +28,7 @@ export const Rc = () => {
     const gamepads = navigator.getGamepads()
     setGamepads(gamepads)
 
-    if (gamepads[0] && bleCharacteristic) {
+    if (gamepads[0]) {
       if (gamepads[0].buttons[5].pressed) {
         setLift((previousLift) => (previousLift < 100 ? previousLift + 1 : previousLift))
       } else if (gamepads[0].buttons[4].pressed) {
@@ -42,6 +42,7 @@ export const Rc = () => {
     throttleEsc = gamepads[0].axes[1] < 0 ? -Math.round(gamepads[0].axes[1] * 1000) + 1000 : 1000
     rudderServo = Math.round(gamepads[0].axes[2] * 80) + 90
 
+    // console.log(`${liftEsc},${throttleEsc},${rudderServo}`)
     bleCharacteristic.writeValueWithoutResponse(
       encoder.encode(`${liftEsc},${throttleEsc},${rudderServo}`),
     )
