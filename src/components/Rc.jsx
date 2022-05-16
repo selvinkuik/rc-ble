@@ -40,9 +40,9 @@ export const Rc = () => {
   if (gamepads[0] && bleCharacteristic) {
     liftEsc = lift * 6 + 1200
     throttleEsc = gamepads[0].axes[1] < 0 ? -Math.round(gamepads[0].axes[1] * 600) + 1200 : 1200
-    rudderServo = Math.round(gamepads[0].axes[2] * 80) + 90
+    rudderServo = Math.round(gamepads[0].axes[2] * (gamepads[0].axes[2] > 0 ? 250 : 325)) + 1550 // Rudders pull to the left
 
-    // console.log(`${liftEsc},${throttleEsc},${rudderServo}`)
+    console.log(`${liftEsc},${throttleEsc},${rudderServo}`)
     bleCharacteristic.writeValueWithoutResponse(
       encoder.encode(`${liftEsc},${throttleEsc},${rudderServo}`),
     )
@@ -66,7 +66,7 @@ export const Rc = () => {
           </Dashboard>
         </Grid>
         <Grid>
-          <Dashboard label="Direction">
+          <Dashboard label="Rudder">
             <GamepadStick gamepad={gamepads[0]} xAxis={2}>
               {rudderServo}
             </GamepadStick>
